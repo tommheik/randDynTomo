@@ -1,4 +1,4 @@
-% T H    2022
+% T Heikkilä    2022
 % Based on codes by TA Bubba and L Ratti
 %% Setup
 addpath(genpath('./tools/'));
