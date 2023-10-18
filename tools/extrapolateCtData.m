@@ -10,7 +10,7 @@ function [sinogram, CtData] = extrapolateCtData(D, allAngles)
 % sinogram  Sequence of sinograms WITHOUT any added noise
 % CtData    HelTomo structure for creating the (block diagonal) forward operator
 %
-% T H   2023
+% T. Heikkilä   2023
 
 T = length(D);
 

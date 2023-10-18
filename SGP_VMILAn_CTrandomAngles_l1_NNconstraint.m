@@ -14,11 +14,9 @@ function [prim, Delta, v1, v2, cont] = SGP_VMILAn_CTrandomAngles_l1_NNconstraint
 %   is present in the implementation in this code.
 %
 % SYNOPSIS
-%   [primal, Delta, dual, cont] = SGP_VMILAn_CTrandomAngles_l1(R, X, grad_smooth, x, z, dual, Phi, alpha, eta, beta, boxflag, UpBound)
+%   [primal, Delta, dual, cont] = SGP_VMILAn_CTrandomAngles_l1(X, grad_smooth, x, z, dual, Phi, alpha, eta, beta, boxflag, UpBound)
 %
 % MANDATORY INPUT
-%   R           (double array or structure with func handle) 
-%                           - system matrix for CT system 
 %   X           (double array)
 %                           - (diagonal) scaling matrix for variable metric
 %   grad_smooth (double array)

@@ -15,6 +15,8 @@ Original algorithm by **Tatiana A. Bubba** and **Luca Ratti**, used in
 - T. A. Bubba and L. Ratti, "Shearlet-based regularization in statistical inverse learning with an application to x-ray tomography", 
 _Inverse Problems_, p. 054001, (2022).
 
+Adapted for dynamic tomography and 3D regularization by **Tommi Heikkilä**.
+
 The minimization problem is solved with the Variable Metric Inexact Line-search Algorithm (**VMILA**) introduced in  
 - S. Bonettini, I. Loris, F. Porta and M. Prato, "Variable metric inexact line-search based methods for nonsmooth optimization", _SIAM J. Optim._, 26 891–921, (2016).
 
@@ -33,6 +35,6 @@ K. J. Batenburg and J. Sijbers, "Fast and flexible x-ray tomography using the AS
 _Opt. Express_ 24 25129–47 (2016).
 - W. Van Aarle, W. J. Palenstijn, J. De Beenhouwer, T. Altantzis, S. Bals, K. J. Batenburg and J. Sijbers, "The ASTRA toolbox: a platform for advanced algorithm development in electron tomography", _Ultramicroscopy_ 157 35–47, (2015).
 
-The algorithm also uses **Spot- A Linear-Operator Toolbox** and **HelTomo**
-- E. Van den Berg and M. P. Friedlander, "Spot-a linear-operator toolbox", v1.2, (2013) http://cs.ubc.ca/labs/scl/spot
+The algorithm also uses **Spot** and **HelTomo**
+- E. Van den Berg and M. P. Friedlander, "Spot - a linear-operator toolbox", v1.2, (2013) http://cs.ubc.ca/labs/scl/spot
 - A. Meaney, "HelTomo - Helsinki Tomography Toolbox", v2.0.0, (2022) https://github.com/Diagonalizable/HelTomo

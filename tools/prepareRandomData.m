@@ -1,5 +1,5 @@
 function [sinogram, CtData, obj] = prepareRandomData(objBig, allAngles)
-%PREPARERANDOMDATA Simulates dynamic data given the upsamled phantom
+%PREPARERANDOMDATA Simulates dynamic data given the upsampled phantom
 %'objBig' and set of random angles 'allAngles'
 % NOTE: this uses parallel beam geometry!
 %
@@ -13,7 +13,7 @@ function [sinogram, CtData, obj] = prepareRandomData(objBig, allAngles)
 % CtData    HelTomo structure for creating the (block diagonal) forward operator
 % obj       Downsampled version of objBig
 %
-% T H   2022
+% T. Heikkilä   2022
 
 
 
@@ -36,12 +36,13 @@ end
 % CtData structure parameters
 binning         = round(1024/N);
 pixelSize = 0.1*binning;
-% Set desired detector geometry (based on N)
+% Set desired detector geometry (based on N) to be the smallest value
+% greater than N
 rows            = [36 72 144 288 576 1152];
 rows            = min(rows(rows > N));
 
 %% Store parameters in a data structure
-% Alexander's code reads these from a text file
+% HelTomo would read these from a text file
 CtData = struct;
 CtData.type = '2D';
 CtData.parameters.angles = [];

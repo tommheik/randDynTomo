@@ -1,5 +1,5 @@
 % version 1.0, T. Bubba, 10 August 2021
-% version 2.0, T H,   18 November 2022 (Updated 18.6.2023)
+% version 2.0, T. Heikkilä,   18 November 2022 (Updated 18.6.2023)
 
 close all
 clear 
@@ -37,7 +37,7 @@ switch dataset
             c_alpha = 0.12;
         end
 
-        obj = load('./phantoms/cartoonPhantom_256x256x32.mat');
+        obj = load('./data/cartoonPhantom_256x256x32.mat');
         objBig = obj.obj; % Upsampled phantom
         obj = 0.5*(objBig(1:2:end-1,:,:) + objBig(2:2:end,:,:));
         obj = 0.5*(obj(:,1:2:end-1,:) + obj(:,2:2:end,:));
@@ -51,12 +51,12 @@ switch dataset
 
         T = 16;
         % Matlab loads the variables as structs containing the variables
-        CtDataOriginal = load('./gelPhantom/GelPhantomData_b4.mat','GelPhantomData_b4');
+        CtDataOriginal = load('./data/gelPhantom/GelPhantomData_b4.mat','GelPhantomData_b4');
 
         % Choose which reconstruction is used as 'ground truth' for computing the Bregman distances
         objFile = 'CIL_tv_256x256x17_scaled.mat'; % 'fbp_256x256x17.mat'
         fprintf('Using file: %s as ground truth \n',objFile)
-        obj = load(['./gelPhantom/', objFile],'obj');
+        obj = load(['./data/gelPhantom/', objFile],'obj');
 
         CtDataOriginal = CtDataOriginal.GelPhantomData_b4(1:T);
         obj = rot90(obj.obj(:,:,1:T));
@@ -70,7 +70,7 @@ switch dataset
 
         T = 16;
         % Matlab loads the variables as structs containing the variables
-        CtDataOriginal = load('./stempo/stempo_seq8x45_2d_b8.mat');
+        CtDataOriginal = load('./data/stempo/stempo_seq8x45_2d_b8.mat');
         CtDataOriginal = CtDataOriginal.CtData;
 
         % Stupid things need to be done
@@ -81,7 +81,7 @@ switch dataset
         % Choose which reconstruction is used as 'ground truth' for computing the Bregman distances
         objFile = 'stempo_ground_truth_2d_b4.mat'; % 'fbp_256x256x17.mat'
         fprintf('Using file: %s as ground truth \n',objFile)
-        obj = load(['./stempo/', objFile],'obj');
+        obj = load(['./data/stempo/', objFile],'obj');
         % We only pick 16 time steps for reference
         objTimeSteps = [2 25 49 73 97 120 144 169 193 217 240 264 287 311 333 328];
         obj = obj.obj(:,:,objTimeSteps);

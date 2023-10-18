@@ -1,6 +1,6 @@
 function pnorm = SHpnorm(coeff,p)
-%SHPNORM is the l^p norm of the cylindrical shearlet coefficients (or any
-%other coefficients stored in cell arrays)
+% SHPNORM is the l^p norm of the cylindrical shearlet coefficients (or any
+% other coefficients stored in cell arrays)
 % Input
 %   coeff       Shearlet coefficients stored in a cell array for each level
 %   p           Exponent p
@@ -10,7 +10,7 @@ function pnorm = SHpnorm(coeff,p)
 % Note: We do not take the p'th root because it is very slow! Therefore we
 % shouldn't use the norm-function either.
 %
-% T H    2022
+% T. Heikkilä    2022
 
 % pnorm = sum(cellfun(@(x) sum(abs(x).^p,'all'), coeff))/p;
 S = 0;

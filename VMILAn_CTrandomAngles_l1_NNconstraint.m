@@ -1,7 +1,7 @@
 function [x, iter, out] = VMILAn_CTrandomAngles_l1_NNconstraint(gn, R, Phi, beta, opts)
 %  VMILA algorithm for shearlets regularized reconstruction problem from CT projections with random angles.
 %  version 1.0, T. Bubba, 09/04/2021
-%  version 2.0, T H,   28/03/2023 (cylindrical shearlets)
+%  version 2.0, T. Heikkilä,   28/03/2023 (cylindrical shearlets)
 %                  
 %   This function solves a tomographic image reconstruction problem by applying 
 %   VMILA to the UNCONSTRAINED minimization of the following objection 
