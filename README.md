@@ -3,7 +3,12 @@
 ## Inverse learning of randomly sampled sparse dynamic tomography
 Numerical methods for estimating the Bregman distance decay rate using cylindrical shearlet regularization for dynamic tomography.
 
-This algorithm is used to produce the numerical results in  
+<img title="Bregman error decay with cylindrical shearlets, p=3/2" alt="Example plot" src="plots/Cartoon_decreasing_p32_Shearlet_Nsamp005.png" width="500">  
+
+_Figure: Example plot of Bregman error decay. Cylindrical shearlets and $p=\frac{3}{2}$-norm is used for regularization._
+
+
+These algorithms are used to produce the numerical results in  
 T. A. Bubba, T. Heikkilä, D. Labate, L. Ratti and ?J. P. Rodriguez Ayllon?,  
 "Super snappy title",  
 _SIAM_ (2023). 
