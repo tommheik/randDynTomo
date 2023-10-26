@@ -63,14 +63,16 @@ switch dataset
 
     case 'Stempo'
         if transform == 2 % cylindrical shearlet
-            c_alpha = 0.005;
+            c_alpha = 0.00005; % 0.005 for p=1.5
         else % Wavelet
-            c_alpha = 0.1;
+            c_alpha = 0.0007; % 0.015 for p=1.5
         end
 
         T = 16;
         % Matlab loads the variables as structs containing the variables
-        CtDataOriginal = load('./data/stempo/stempo_seq8x45_2d_b8.mat');
+        dataName = 'stempo_seq8x180_2d_b8.mat';
+        fprintf('Using %s\n',dataName);
+        CtDataOriginal = load(['./data/stempo/', dataName]);		   
         CtDataOriginal = CtDataOriginal.CtData;
 
         % Stupid things need to be done
@@ -79,15 +81,15 @@ switch dataset
         CtDataOriginal.parameters.effectivePixelSize = CtDataOriginal.parameters.effectivePixelSizePost;
 
         % Choose which reconstruction is used as 'ground truth' for computing the Bregman distances
-        objFile = 'stempo_ground_truth_2d_b4.mat'; % 'fbp_256x256x17.mat'
+        objFile = 'stempo_cwtRecn_280x280x16.mat'; % 'stempo_ground_truth_2d_b4.mat'; % 'fbp_256x256x17.mat'
         fprintf('Using file: %s as ground truth \n',objFile)
         obj = load(['./data/stempo/', objFile],'obj');
         % We only pick 16 time steps for reference
-        objTimeSteps = [2 25 49 73 97 120 144 169 193 217 240 264 287 311 333 328];
+        objTimeSteps = 1:T; % For cwtRecn							 
         obj = obj.obj(:,:,objTimeSteps);
 
-        fprintf('Resizing obj to 280x280\n');
-        obj = imresize(obj,[280,280]);
+        
+		
 
 end
 
@@ -104,11 +106,11 @@ switch dataset
     case 'Stempo'
         % Not so many angles available for Stempo data
         Nangsamp = 6;
-        NangMin = 8;
-        NangMax = 50;
+        NangMin = 9;
+        NangMax = 60;
     otherwise
         % Shearlet: 16:240 with 8
-        % Wavelet: 16:520 with 10 (not that good actually)
+        % Wavelet: 16:520 with 10
         Nangsamp = 8;
         NangMin = 16;
         NangMax = 240;
@@ -204,10 +206,10 @@ allAngles_cell = cell(Nangsamp,1);
 switch fixed_noise % Note mMax is missing from c_delta!
     case 1
         % Fixed noise level delta, alpha decreases as angles increase
-        c_delta = 0.03; % 0.03 good, 0.01 was not good
+        c_delta = 0.03; % 0.03 good, 0.08 for stempo
     case 0
         % Both alpha and delta decrease as angles increase
-        c_delta = 0.035*numAngles(1);
+        c_delta = 0.035*numAngles(1); % 0.08 for stempo
 end
 
 switch fixed_noise
@@ -233,7 +235,7 @@ for i = 1:Nangsamp
     switch dataset
         case 'Stempo'
             % Stempo uses different setup, projections only go 180 degrees
-            Tshift = [180*(0:1:T-2),(T-1)*180 - 8]; % Last time step is shifted only 172 degrees!
+            Tshift = [180*(0:1:T-2),(T-1)*180 - 2]; % Last time step is shifted only 178 degrees!
             allAngles = 180*rand(Nsamp, T, Nang) + Tshift;
         otherwise
             % other data is simpler

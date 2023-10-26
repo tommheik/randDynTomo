@@ -41,5 +41,6 @@ for t = 1:T
     ind = floor(decInd);
     dec = rem(decInd(:),1); % Forced to column vector!
 
-    sinogram(:,:,t) = dec.*OGsino(ind,:) + (1-dec).*OGsino(ind+1,:);
+    % Decimal part gives the opposite amount of weight, i.e. '1.9' is 10% like 1 and 90% like 2
+    sinogram(:,:,t) = (1-dec).*OGsino(ind,:) + dec.*OGsino(ind+1,:);
 end

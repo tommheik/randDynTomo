@@ -7,7 +7,7 @@ function bregDistance = bregL1(Mu, Mv)
 %
 % Note: if one of the vectors is 0, then l1-norm should be used!
 %
-% T H   2023
+% T. Heikkilä   2023
 
 lvl = length(Mu);
 if length(Mv) ~= lvl

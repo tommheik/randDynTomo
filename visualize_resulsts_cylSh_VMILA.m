@@ -41,6 +41,7 @@ Nangsamp = length(allAngles_cell);
 %     numAngles = round(linspace(NangMin,NangMax,Nangsamp));
 % end
 
+close all
 
 vec = @(x) x(:);
 array = @(x,n) reshape(x,n);
@@ -56,6 +57,7 @@ numAngles = numAngles(ind);
 Nangsamp = length(numAngles);
 
 %% Generate transform M
+for i = 1 % For loop to hide this part...
 if redoBregman
     fprintf('Recomputing Bregman distances, please wait \n');
     switch transform
@@ -111,6 +113,7 @@ if redoBregman
         end
         fprintf('\n');
     end
+end
 end
 
 %% Comparison plot - Bregman

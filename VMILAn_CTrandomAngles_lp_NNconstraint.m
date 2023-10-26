@@ -4,7 +4,7 @@ function [x, iter, out] = VMILAn_CTrandomAngles_lp_NNconstraint(gn, R, Phi, p, b
 %  version 2.0, T. Heikkilä,   18/11/2022 (cylindrical shearlets)
 %                  
 %   This function solves a tomographic image reconstruction problem by applying 
-%   VMILA to the UNCONSTRAINED minimization of the following objection 
+%   VMILA to the CONSTRAINED minimization of the following objection 
 %   funcion:
 %
 %       min 0.5 || R*f - y ||^2 + beta/p * ||SH(f)||_p^p 

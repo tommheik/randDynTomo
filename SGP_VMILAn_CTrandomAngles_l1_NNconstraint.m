@@ -16,7 +16,7 @@ function [prim, Delta, v1, v2, cont] = SGP_VMILAn_CTrandomAngles_l1_NNconstraint
 % SYNOPSIS
 %   [primal, Delta, dual, cont] = SGP_VMILAn_CTrandomAngles_l1(X, grad_smooth, x, z, dual, Phi, alpha, eta, beta, boxflag, UpBound)
 %
-% MANDATORY INPUT
+% MANDATORY INPUT												  
 %   X           (double array)
 %                           - (diagonal) scaling matrix for variable metric
 %   grad_smooth (double array)
@@ -73,7 +73,7 @@ alpha_max = 1e5;	   % alpha upper bound
 Malpha = 3;            % alfaBB1 memory
 tau = 0.5;             % alternating parameter
 initalpha = 1.3;       % initial alpha
-maxinnerit = 50;
+maxinnerit = 20;
 
 xSz = size(x);
 
