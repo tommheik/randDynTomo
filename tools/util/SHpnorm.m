@@ -12,10 +12,9 @@ function pnorm = SHpnorm(coeff,p)
 %
 % T. Heikkilä    2022
 
-% pnorm = sum(cellfun(@(x) sum(abs(x).^p,'all'), coeff))/p;
-S = 0;
+S = zeros(1,length(coeff));
 for k = 1:length(coeff)
-    S = S + sum(abs(coeff{k}).^p,'all');
+    S(k) = sum(abs(coeff{k}).^p,'all');
 end
-pnorm = S / p;
+pnorm = sum(S) / p;
 

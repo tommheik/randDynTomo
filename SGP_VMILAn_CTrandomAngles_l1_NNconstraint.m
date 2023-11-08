@@ -225,32 +225,3 @@ cont = cont - 1;
 
 
 return
-
-%% Helper functions
-
-function C = SH2feas(C, bound)
-    % Constrain shearlet coefficients C to be inside [-bound, bound]
-    for L = 1:length(C)
-        b = max(C{L}, -bound);
-        C{L} = min(b, bound);
-    end
-end
-
-function W = SHsum(U, V, a, b)
-%SHSUM W = aU + bV
-    Llen = length(U);
-    W  = cell(1,Llen);
-    for L = 1:Llen
-        W{L} = a*U{L} + b*V{L};
-    end
-end
-
-end
-
-
-
-
-
-
-
-

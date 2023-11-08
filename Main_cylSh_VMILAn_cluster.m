@@ -4,23 +4,24 @@
 close all
 clear 
 
-dataset = 'Stempo'; % 'Gel'; % 'Cartoon'
+dataset = 'Stempo'; % 'Cartoon'
 
 dateString = string(datetime('now','TimeZone','local','Format','yyMMdd-HHmmss'));
 fprintf('Begin at: %s \n',dateString);
 
 fprintf('Reconstructing dataset: %s \n', dataset);
 
-% Only the old ASTRA toolbox works
-addpath(genpath('../PDFP4D/tools/astra-toolbox'))
 addpath(genpath('./tools/'));
+rmpath(('./tools/cylind_shear/'))
+rmpath(('./tools/UH Tomography Tools/'))
+addpath(genpath(Gpath('cylind_shear/')));
 
 % Regularization method
-p = 1.5; % 1.5;
-transform = 1; % 1:wavelet; 2:cyl.shearlet; 0:identity
+p = 1.5; % 1.5; 1;
+transform = 2; % 1:wavelet; 2:cyl.shearlet; 0:identity
 version = 1;
 
-plotsies = false; % Visuals disabled for cluster
+plotsies = false; % Show visuals from final results
 
 CUDAflag = false;
 if CUDAflag
@@ -43,6 +44,10 @@ switch dataset
         obj = 0.5*(obj(:,1:2:end-1,:) + obj(:,2:2:end,:));
 
     case 'Gel'
+        % Gel phantom data is available in Zenodo:
+        % https://doi.org/10.5281/zenodo.7876521
+        warning("Option: '%s' is NOT fully implemented!", dataset);
+
         if transform == 2 % cylindrical shearlet
             c_alpha = 0.005;
         else % Wavelet
@@ -62,6 +67,8 @@ switch dataset
         obj = rot90(obj.obj(:,:,1:T));
 
     case 'Stempo'
+        % Stempo data is available in Zenodo:
+        % https://doi.org/10.5281/zenodo.8239013
         if transform == 2 % cylindrical shearlet
             c_alpha = 0.00005; % 0.005 for p=1.5
         else % Wavelet
@@ -75,11 +82,6 @@ switch dataset
         CtDataOriginal = load(['./data/stempo/', dataName]);		   
         CtDataOriginal = CtDataOriginal.CtData;
 
-        % Stupid things need to be done
-        CtDataOriginal.parameters.numDetectors = CtDataOriginal.parameters.numDetectorsPost;
-        CtDataOriginal.parameters.pixelSize = CtDataOriginal.parameters.pixelSizePost;
-        CtDataOriginal.parameters.effectivePixelSize = CtDataOriginal.parameters.effectivePixelSizePost;
-
         % Choose which reconstruction is used as 'ground truth' for computing the Bregman distances
         objFile = 'stempo_cwtRecn_280x280x16.mat'; % 'stempo_ground_truth_2d_b4.mat'; % 'fbp_256x256x17.mat'
         fprintf('Using file: %s as ground truth \n',objFile)
@@ -87,10 +89,6 @@ switch dataset
         % We only pick 16 time steps for reference
         objTimeSteps = 1:T; % For cwtRecn							 
         obj = obj.obj(:,:,objTimeSteps);
-
-        
-		
-
 end
 
 % Other
@@ -132,7 +130,7 @@ array = @(x,n) reshape(x,n);
 
 %% Generate transform M
 switch transform
-    case 1
+    case 1 % Wavelet regularization
         xSz = [Npxl,Npxl,T];
         wname = 'db2';
         level = 3;
@@ -142,22 +140,32 @@ switch transform
         getDec  = @(x) x.dec;
         M.times = @(x) getDec(wavedec3(x,level,wname));    % 3D wavelet transform
         M.adj   = @(x) dec2waverec3(x,wSys);    % transpose of 3D wavelet transform
-    case 2
+
+    case 2 % Cylindrical shearlet regularization
+        %%% THIS IS A MINIMAL WORKING EXAMPLE, NOT THE OPTIMAL SOLUTION! %%%
+
         % Listed coarse -> fine (as in theory),
         % algorithm works fine -> coarse (like wavelets)
-        decomp=[3 3 4]; % [2 3 3 4];
-        dsize=[16, 16, 32]; % [8 16, 16 32];
-        level=3; % 4; % choose level of decomposition ,
+        decomp = [3 3 4]; % [2 3 3 4];
+        dsize = [16, 16, 32]; % [8 16, 16 32];
+        level = 3; % 4; % choose level of decomposition ,
         xSz = [Npxl,Npxl,T];
-        [shear_f]=setup_cylindrical_shearV2(decomp,dsize,level);
+        
+        %%% Generate cylindrical shearlet filters %%%
+        BP_sizes = cell(1,level);
+        BPtemp = DoPyrDec(zeros(xSz), level);
+        for l = 1:level; BP_sizes{l} = size(BPtemp{l}); end
+        
+        shear_f = setup_cylindrical_filters(BP_sizes, decomp, dsize, level);
+        
         fprintf('Using cylindrical shearlets at level %d \n', level);
         
         % Define forward and adjoint for cylindrical shearlets
         % Note the input MUST be reshaped correctly!
-%         M.times = @(x) cylindrical_shearV2(DoPyrDec(x,level),shear_f,level);
-        M.times = @(x) cylindrical_shearV2(PyrNDDec_mm(x, 'S', level, 2, @rcos), shear_f,level);
-        M.adj   = @(x) cylindrical_shear_adjV2(x,shear_f,level);
-    case 0
+        M.times = @(x) cylindrical_shear(DoPyrDec(x, level), shear_f, decomp, level);
+        M.adj   = @(x) cylindrical_shear_adj(BP_sizes, x, shear_f, decomp, level);
+
+    case 0 % Tikhonov regularization
         M.times = @(x) x;
         M.adj = @(x) x;
 end
@@ -165,13 +173,14 @@ end
 %% VMILA optional parameters
 opts = struct();
 opts.x0       = zeros(xSz);  
-normobj = norm(obj(:));          % norm of the phantom
 opts.obj      = obj;
 opts.tolstop  = 1e-5;
 opts.stopcrit = 2;
 opts.scaling  = true;
 opts.savefreq = 5;
 % opts.maxit = 3;
+
+normobj       = norm(obj(:));          % norm of the phantom
 
 %% Allocate vectors to store values for final plots
 err = zeros(Nangsamp,Nsamp);
@@ -196,7 +205,7 @@ switch p
         BregDist = zeros(Nangsamp,Nsamp);
 end
 DataDiscr = zeros(Nangsamp,Nsamp);
-rec_save_cell = cell(Nangsamp,Nsamp); %zeros(Npxl^2,Nangsamp);
+rec_save_cell = cell(Nangsamp,Nsamp);
 
 allAngles_cell = cell(Nangsamp,1);
 
@@ -207,23 +216,24 @@ switch fixed_noise % Note mMax is missing from c_delta!
     case 1
         % Fixed noise level delta, alpha decreases as angles increase
         c_delta = 0.03; % 0.03 good, 0.08 for stempo
-    case 0
-        % Both alpha and delta decrease as angles increase
-        c_delta = 0.035*numAngles(1); % 0.08 for stempo
-end
 
-switch fixed_noise
-    case 1
+        %%% ALPHA AND DELTA SET AUTOMATICALLY! %%%
         alpha = c_alpha*numAngles.^(-1/3);
         delta = c_delta*ones(1,Nangsamp);
     case 0
+        % Both alpha and delta decrease as angles increase
+        % NOTE: c_delta depends on N_1!
+        c_delta = 0.035*numAngles(1); % 0.08 for stempo
+
+        %%% ALPHA AND DELTA SET AUTOMATICALLY! %%%
         alpha = c_alpha*numAngles.^(-1);
         delta = c_delta.*numAngles.^(-1);
 end
 
+
 for i = 1:Nangsamp
     Nang = numAngles(i); % Number of projection angles per time step
-    fprintf('Number of angles %d (%d out of %d): \n',Nang,i,Nangsamp)
+    fprintf('Number of angles: %d (%d out of %d): \n',Nang,i,Nangsamp)
 
     %% Generate data, operator and apply noise
     rngSeed = 42; % Used to make everything 'random' repeatable (and iterable with different seed)
@@ -244,7 +254,7 @@ for i = 1:Nangsamp
     allAngles_cell{i} = allAngles; % Store angles
     
     for k = 1:Nsamp % Repeat same number of angles but different actual angles and realizations of noise
-        fprintf('Sample %d (%d angles): \t',k,Nang)
+        fprintf('Sample: %d (%d angles): \t',k,Nang)
         
         Angles = squeeze(allAngles(k,:,:)); % Unique angles
         fprintf('Angles used:\n      %1.2f, %1.2f, ..., %1.2f (deg)\n      ...\n      %1.2f, %1.2f, ..., %1.2f \n',...
@@ -264,11 +274,9 @@ for i = 1:Nangsamp
                 % Block diagonal operator with the random angles
                 if CUDAflag
                     error('Parallel beam CUDA implementation missing!')
-                    A = create_blkdiag_ct_operator_2d_fan_astra_cuda(CtData,Npxl,Npxl,Angles); 
+                    A = create_blkdiag_ct_operator_2d_parallel_astra_cuda(CtData,Npxl,Npxl,Angles); 
                 else
                     A = normA*create_blkdiag_ct_operator_2d_parallel_astra_cpu(CtData,Npxl,Npxl,Angles); 
-                    % BlockDiag operator weighted by 1/norm(A) to normalize
-                    % A = opBlockDiag(normA*ones(1,T),Asmall);
                 end
 
             case 'Gel'
@@ -325,7 +333,7 @@ for i = 1:Nangsamp
                 BregDist(i,k) = bregL1(Mobj, M.times(rec)) / MobjNorm;
 %                 BregDist_zero(i,k) = SymbregR2(f(:),rec(:),M)/(SymbregR2(f(:),0*rec(:),M));
             case 2
-                error('Not implemented yet!')
+                error('Not implemented!')
                 J = @(f) 1/2*norm(A.times(f)-meas)^2 + alpha(i)/2*norm(f)^2;
                 gradJ = @(f) A.adj(A.times(f)-meas) + alpha(i)*f;
                 [rec,~,~,~,~] = SGP_generic(J, gradJ, opts.x0);

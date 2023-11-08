@@ -48,7 +48,11 @@ if isfield(CtData.parameters,'numDetectors') % v1 field name
 elseif isfield(CtData.parameters,'numDetectorsPost') % v2 field name
     numDetectors    = CtData.parameters.numDetectorsPost;
 end
-pixelSize       = CtData.parameters.pixelSize;
+if isfield(CtData.parameters,'effectivePixelSize') % v1 field name
+    effPixel    = CtData.parameters.numDetectors;
+elseif isfield(CtData.parameters,'effectivePixelSizePost') % v2 field name
+    effPixel    = CtData.parameters.effectivePixelSizePost;
+end
 
 % ASTRA uses angles in radians
 anglesRad       = deg2rad(angles);

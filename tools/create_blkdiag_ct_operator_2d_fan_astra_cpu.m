@@ -46,12 +46,19 @@ end
 DSD             = CtData.parameters.distanceSourceDetector;
 DSO             = CtData.parameters.distanceSourceOrigin;
 M               = CtData.parameters.geometricMagnification;
+
+% This implementation works with v1 and v2 of HelTomo
 if isfield(CtData.parameters,'numDetectors') % v1 field name
     numDetectors    = CtData.parameters.numDetectors;
 elseif isfield(CtData.parameters,'numDetectorsPost') % v2 field name
     numDetectors    = CtData.parameters.numDetectorsPost;
 end
-effPixel        = CtData.parameters.effectivePixelSize;
+if isfield(CtData.parameters,'effectivePixelSize') % v1 field name
+    effPixel    = CtData.parameters.numDetectors;
+elseif isfield(CtData.parameters,'effectivePixelSizePost') % v2 field name
+    effPixel    = CtData.parameters.effectivePixelSizePost;
+end
+
 
 % Distance from origin to detector
 DOD             = DSD - DSO;
