@@ -9,9 +9,9 @@ _Figure: Example plot of Bregman error decay. Cylindrical shearlets and $p=\frac
 
 
 These algorithms are used to produce the numerical results in  
-T. A. Bubba, T. Heikkilä, D. Labate, L. Ratti and ?J. P. Rodriguez Ayllon?,  
-"Super snappy title",  
-_SIAM_ (2023). 
+[T. A. Bubba](https://orcid.org/0000-0003-0020-9210), [T. Heikkilä](https://orcid.org/0000-0001-5505-8136), [D. Labate](https://orcid.org/0000-0002-9718-789X), [L. Ratti](https://orcid.org/0000-0001-7948-0577) and ?J. P. Rodriguez Ayllon?,  
+"Optimal representation of space-time priors",  
+_pre-print_ (2024). 
 
 The references and necessary toolboxes are listed in the [credits](#credits).
 
@@ -44,8 +44,6 @@ The repository contains the following files and folders.
 
 - `CreateFinalPlots_ErrorBar.m`: function for generating the Bregman distance error plots used in the paper.
 
-- `visualize_results_cylSh_VMILA.m`: function for generating some Bregman distance error plots. Not used in the final paper.
-
 **data**:  
 
 - `cartoonPhantom_256x256x*.mat`: simulated phantom at twice the desired spatial resolution (256 x 256) and two temporal resolutions: `T = 32` and `T = 64`. The data is simulated separately on the spot for the random projection angles.
@@ -71,6 +69,8 @@ The repository contains the following files and folders.
 - `SH2feas.m`: project cylindrical shearlet coefficients (cell arrays) to the feasible region `[-bound, bound]`.
 
 - `SHpnorm.m`: computes the $\frac{1}{p} \| U \|_p^p$ function from the given cylindrical shearlet coefficients $U$ (cell array).
+
+- `cellnorm`: computes the $\ell^p$-norm from the given cylindrical shearlet coefficients (cell array).
 
 - `SHsum.m`: linear combination $aU + bV$ of cylindrical shearlet coefficients $U$ and $V$, scaled by $a$ and $b$.
 
