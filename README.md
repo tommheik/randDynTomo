@@ -1,6 +1,6 @@
-# cylSh-inverse-learning-rates
+# randDynTomo
 
-## Inverse learning of randomly sampled sparse dynamic tomography
+## Statistical inverse learning of randomly sampled sparse dynamic tomography
 Numerical methods for estimating the Bregman distance decay rate using cylindrical shearlet regularization for dynamic tomography.
 
 <img title="Bregman error decay with cylindrical shearlets, p=3/2" alt="Example plot" src="plots/Cartoon_decreasing_p32_Shearlet_Nsamp005.png" width="500">  
@@ -10,7 +10,7 @@ _Figure: Example plot of Bregman error decay. Cylindrical shearlets and $p=\frac
 
 These algorithms are used to produce the numerical results in  
 > [T. A. Bubba](https://orcid.org/0000-0003-0020-9210), [T. Heikkilä](https://orcid.org/0000-0001-5505-8136), [D. Labate](https://orcid.org/0000-0002-9718-789X) and [L. Ratti](https://orcid.org/0000-0001-7948-0577),  
-"Regularisation with optimal space-time priors",  
+"Regularization with optimal space-time priors",  
 _pre-print_ (2024). 
 
 The references and necessary toolboxes are listed in the [credits](#credits).
