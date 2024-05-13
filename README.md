@@ -11,7 +11,7 @@ _Figure: Example plot of Bregman error decay. Cylindrical shearlets and $p=\frac
 These algorithms are used to produce the numerical results in  
 > [T. A. Bubba](https://orcid.org/0000-0003-0020-9210), [T. Heikkilä](https://orcid.org/0000-0001-5505-8136), [D. Labate](https://orcid.org/0000-0002-9718-789X) and [L. Ratti](https://orcid.org/0000-0001-7948-0577),  
 "Regularization with optimal space-time priors",  
-_pre-print_ (2024). 
+_arXiv pre-print_: [2405.06337](http://arxiv.org/abs/2405.06337) (2024). 
 
 The references and necessary toolboxes are listed in the [credits](#credits).
 
