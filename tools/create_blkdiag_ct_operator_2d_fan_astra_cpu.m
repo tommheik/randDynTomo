@@ -54,7 +54,7 @@ elseif isfield(CtData.parameters,'numDetectorsPost') % v2 field name
     numDetectors    = CtData.parameters.numDetectorsPost;
 end
 if isfield(CtData.parameters,'effectivePixelSize') % v1 field name
-    effPixel    = CtData.parameters.numDetectors;
+    effPixel    = CtData.parameters.effectivePixelSize;
 elseif isfield(CtData.parameters,'effectivePixelSizePost') % v2 field name
     effPixel    = CtData.parameters.effectivePixelSizePost;
 end

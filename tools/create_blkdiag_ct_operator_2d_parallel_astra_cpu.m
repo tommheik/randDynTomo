@@ -49,7 +49,7 @@ elseif isfield(CtData.parameters,'numDetectorsPost') % v2 field name
     numDetectors    = CtData.parameters.numDetectorsPost;
 end
 if isfield(CtData.parameters,'effectivePixelSize') % v1 field name
-    effPixel    = CtData.parameters.numDetectors;
+    effPixel    = CtData.parameters.effectivePixelSize;
 elseif isfield(CtData.parameters,'effectivePixelSizePost') % v2 field name
     effPixel    = CtData.parameters.effectivePixelSizePost;
 end
@@ -64,15 +64,15 @@ fprintf('Creating geometries and data objects in ASTRA... ');
 volumeGeometry = astra_create_vol_geom(xDim, yDim);
 
 numOps = size(angles,1);
-if isvector(angles)
+if isvector(anglesRad)
     numOps = 1;
-    angles = angles(:)'; % Force to row vector
+    anglesRad = anglesRad(:)'; % Force to row vector
 end
 Alist = cell(1,numOps);
 
 for i = 1:numOps
     % Create projection geometry
-    projectionGeometry = astra_create_proj_geom('parallel', pixelSize, numDetectors, ...
+    projectionGeometry = astra_create_proj_geom('parallel', effPixel, numDetectors, ...
                                                 anglesRad(i,:));
     % Create the Spot operator for ASTRA using the GPU.
     Alist{i} = opTomo('strip', projectionGeometry, volumeGeometry);
